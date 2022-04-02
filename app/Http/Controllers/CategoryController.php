@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\categoryRequest;
 use App\Models\categorie;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -16,7 +17,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-       return view('category');
+        $category[]=new categorie();
+        $title="Categories";
+        $category=Auth()->user()->categories;
+        return view("productsCategory",compact('category','title'));
     }
 
     /**
@@ -39,19 +43,26 @@ class CategoryController extends Controller
     public function store(categoryRequest $request)
     {
          $validated= $request->validated();
-        
-        if($request->file('category_fileimg')->isValid())
-        {
-            $name = $request->category_fileimg->getClientOriginalName();
-            $request->category_fileimg->storeAs('/public/imageCategory', $name);
-            
-            $validated['category_fileimg']=$name;
-        }
-        $validated['user_id']=1;
+         
+         if ($request->hasFile('category_fileimg') ) {
+             if($request->file('category_fileimg')->isValid())
+            {
+                $name = $request->category_fileimg->getClientOriginalName();
+                $request->category_fileimg->storeAs('/public/imageCategory', $name);
+                
+                $validated['category_fileimg']=$name;
+            }
+         }
+         else
+         {
+                $validated['category_fileimg']="";
+         }
+       
+        $validated['user_id']=Auth()->user()->id;
 
         $category=categorie::create($validated);
-
-        return response()->json($category);
+        Toastr::success('Categorie Ajoutée avec succès','Succès');
+        return redirect('categories');
     }
 
     /**
@@ -62,7 +73,20 @@ class CategoryController extends Controller
      */
     public function show(categorie $category)
     {
+
         return response()->json($category);
+    }
+
+    /**
+     * method get products of a category.
+     *
+     * @param  \App\Models\categorie  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function showProductCategory(categorie $category)
+    {
+        $products=$category->products;
+        return response()->json($products);
     }
 
     /**
@@ -87,14 +111,23 @@ class CategoryController extends Controller
     public function update(categoryRequest $request, categorie $category)
     {
         $validated=$request->all();
-        if($request->file('category_fileimg')->isValid())
-        {
-            $name = $request->category_fileimg->getClientOriginalName();
-            $request->category_fileimg->storeAs('/public/imageCategory', $name);
-            $validated['category_fileimg']=$name;
+        // dd( $validated);
+         if ($request->hasFile('category_fileimg') ) {
+            if($request->file('category_fileimg')->isValid())
+            {
+                $name = $request->category_fileimg->getClientOriginalName();
+                $request->category_fileimg->storeAs('/public/imageCategory', $name);
+                $validated['category_fileimg']=$name;
+            }
         }
-        $get=$category->update($validated);
-        return $get;
+        else
+        {
+            $validated['category_fileimg']=$category->category_fileimg;
+        }
+        
+        $category->update($validated);
+        Toastr::success('Categorie Modifée avec succès','Succès');
+        return redirect('categories');
     }
 
     /**

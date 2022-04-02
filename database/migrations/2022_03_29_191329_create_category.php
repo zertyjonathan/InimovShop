@@ -15,7 +15,7 @@ class CreateCategory extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('category_title',100)->unique();
+            $table->string('category_title',100);
             $table->string('category_fileimg')->nullable();
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

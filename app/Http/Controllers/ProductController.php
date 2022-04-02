@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\productRequest;
 use App\Models\categorie;
 use App\Models\product;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -16,7 +18,31 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products');
+        $products[]=new product();
+        $category[]=new categorie();
+        $title="Produits";
+        $pages="";
+        if (Auth::user())
+        {
+            foreach(Auth()->user()->categories as $category)
+            {
+                foreach($category->products as $product)
+                {
+                    array_push($products,$product);
+                }
+            }
+            $category=Auth()->user()->categories;
+            $pages="productsCategory";
+        }
+        else
+        {
+            $products= product::all();
+            $category=categorie::all();
+             $pages="index";
+        }
+        // dd($products);
+        
+        return view($pages,compact('products','category','title'));
     }
 
     /**
@@ -27,7 +53,8 @@ class ProductController extends Controller
     public function create()
     {
         $operation="create";
-        return view('createUpdateProduct',compact('operation'));
+        $category=Auth()->user()->categories;
+        return view('createUpdateProduct',compact('operation','category'));
     }
 
     /**
@@ -38,21 +65,25 @@ class ProductController extends Controller
      */
     public function store(productRequest $request)
     {
-
         $validated= $request->validated();
-        
-        if($request->file('product_fileimg')->isValid())
-        {
-            $name = $request->product_fileimg->getClientOriginalName();
-            $request->product_fileimg->storeAs('/public/imageProduct', $name);
-            
-            $validated['product_fileimg']=$name;
-        }
-
-        // dd($validated);
+         if ($request->hasFile('category_fileimg') ) {
+            if($request->file('product_fileimg')->isValid())
+            {
+                $name = $request->product_fileimg->getClientOriginalName();
+                $request->product_fileimg->storeAs('/public/imageProduct', $name);
+                
+                $validated['product_fileimg']=$name;
+            }
+         }
+         else
+         {
+             $validated['product_fileimg']="";
+         }
+       
         $product=product::create($validated);
-
-        return response()->json($product);
+        Toastr::success('Produit Ajouté avec succès','Succès');
+        return redirect('products');
+        // return response()->json($product);
     }
 
     /**
@@ -63,10 +94,7 @@ class ProductController extends Controller
      */
     public function show(product $product)
     {
-        // dd($product);
         $product= product::find($product->id);
-        dd($product->categories);
-        // $categories->products;
         return response()->json($product);
     }
 
@@ -79,7 +107,8 @@ class ProductController extends Controller
     public function edit(product $product)
     {
         $operation="update";
-        return view('createProduct',compact('operation','product'));
+        $category=Auth()->user()->categories;
+        return view('createUpdateProduct',compact('operation','product','category'));
     }
 
     /**
@@ -91,7 +120,23 @@ class ProductController extends Controller
      */
     public function update(productRequest $request, product $product)
     {
-        return $request;
+        $validated=$request->all();
+        if ($request->hasFile('category_fileimg') ) {
+            if($request->file('product_fileimg')->isValid())
+            {
+                $name = $request->product_fileimg->getClientOriginalName();
+                $request->product_fileimg->storeAs('/public/imageProduct', $name);
+                $validated['product_fileimg']=$name;
+            }
+        }
+         else
+        {
+            $validated['category_fileimg']=$product->category_fileimg;
+        }
+
+        $product->update($validated);
+        Toastr::success('Produit Modifié avec succès','Succès');
+        return redirect('products');
     }
 
     /**
@@ -102,6 +147,14 @@ class ProductController extends Controller
      */
     public function destroy(product $product)
     {
-        //
+        $product->delete();
+        Toastr::success('Produit Supprimé avec succès','Succès');
+        return redirect('products');
+    }
+
+    public function apiUrl(Request $request)
+    {
+        $uri=$request->apiUrl;
+
     }
 }

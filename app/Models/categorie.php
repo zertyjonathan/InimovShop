@@ -39,4 +39,9 @@ class categorie extends Model
         return $this->hasMany('App\Models\product','categorie_id');
     }
 
+    public function users()
+    {
+        return $this->belongsTo('App\Models\users','user_id');
+    }
+
 }

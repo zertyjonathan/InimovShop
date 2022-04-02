@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{--  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -72,4 +72,114 @@
         </form>
 
 </body>
-</html>
+</html>  --}}
+
+@extends('layouts.structure',['page'=>'product'])
+
+@section('link')
+    <link rel="stylesheet" href="{{asset('styles/main.css')}}" />
+    <link rel="stylesheet" href="{{asset('styles/form.css')}}">
+    <link rel="stylesheet" href="{{asset('styles/font-awesome/css/font-awesome.min.css')}}" />
+@endsection
+
+@section('title', 'Produits')
+
+@section('header')
+    @include('layouts.partial._header',['title'=>"produits","authentification"=>true])
+@endsection
+
+@section('nav')
+     @include('layouts.partial._navbar',["title"=>"Talla","subtitle"=>"Jonathan","items"=>['Categories','Produits']])
+@endsection
+
+@section('main')
+    <div class="containerForm">
+        <div class="title">
+            @if ($operation=='create')
+                 Nouveau produit
+            @else
+                 Modifier produit
+            @endif
+        </div>
+        <div class="content">
+            <form action="{{route($operation=='create'?'newProduct':'upProduct',$operation=='update'?['product'=>$product->id]:'')}}" method="post" enctype="multipart/form-data" class="formProduct">
+                @csrf
+                 @if($operation=='update')
+                         <div style="margin: 15px;">
+                            <img src="{{asset('storage/imageProduct/'.$product->product_fileimg)}}" alt="" width="234px">
+                        </div>
+                        <div class="input-box">
+                            <span class="details">Changer de photo</span>
+                            <input id="product_fileimg" type="file" name="product_fileimg" class="@error('product_fileimg') is-invalid @enderror">
+                            @error('product_fileimg')
+                                <div class="alert alert-danger">{{ $message }}</div> <br>
+                            @enderror
+                            
+                        </div>
+                       
+                    @endif
+
+                <div class="user-detail">
+                    <div class="input-box">
+                        <span class="details">Categories</span>
+                        <select id="categorie_id" type="number" name="categorie_id" value="{{old('categorie_id')}}" required>
+                            @foreach ($category as $cat)
+                                @if($operation=="update" && $cat->id==$product->categorie_id)
+                                    <option value="{{$cat->id}}" selected>{{$cat->category_title}}</option>
+                                @else
+                                    <option value="{{$cat->id}}">{{$cat->category_title}}</option>
+                                @endif
+                            @endforeach                          
+                        </select>
+                        @error('categorie_id')
+                            <div class="alert alert-danger">{{ $message }}</div> <br>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="user-details">
+                    <div class="input-box">
+                        <span class="details">Nom</span>
+                        <input id="product_name" type="text" name="product_name" value="{{ $operation=='update'? old('product_name') ?? $product->product_name:old('product_name') }}" class="@error('product_name') is-invalid @enderror" required>
+                        @error('product_name')
+                            <div class="alert alert-danger">{{ $message }}</div> <br>
+                        @enderror
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Prix</span>
+                        <input id="product_price" type="number" name="product_price" value="{{ $operation=='update'? old('product_price') ?? $product->product_price:old('product_price') }}" class="@error('product_price') is-invalid @enderror" required>
+                        @error('product_price')
+                            <div class="alert alert-danger">{{ $message }}</div> <br>
+                        @enderror
+                    </div>
+                    <div class="input-box">
+                        <span class="details">qte Stockée</span>
+                        <input id="product_stock" type="number" name="product_stock" value="{{ $operation=='update'?old('product_stock') ?? $product->product_stock:old('product_stock') }}" class="@error('product_stock') is-invalid @enderror" required>
+                    </div>
+                    @if($operation=='create')
+                        <div class="input-box">
+                            <span class="details">Photo</span>
+                            <input id="product_fileimg" type="file" name="product_fileimg" class="@error('product_fileimg') is-invalid @enderror">
+                            @error('product_fileimg')
+                                <div class="alert alert-danger">{{ $message }}</div> <br>
+                            @enderror
+                        </div>
+                    @endif
+                    
+                   
+                    
+                   
+                </div>
+
+                <div class="button">
+                    <input type="submit" value="{{$operation=='create'?'Enregistrer':'Sauver'}}">
+                    <a href="{{route('products')}}" style="width: 700px;"><input type="button" value="Annuler"></a>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@section('footer')
+     @include('layouts.partial._footer')
+@endsection

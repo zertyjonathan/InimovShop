@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\userRequest;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +32,7 @@ class loginController extends Controller
         // dd($request->all());
         $validator = Validator::make($request->all(),
             [
-                'email' => ['required','exists:users,email','email:dns'],
+                'email' => ['required','exists:users,email','email'],
                 'password' => ['required','string','max:20'],
                 'remember'=>[]
             ],
@@ -56,12 +57,13 @@ class loginController extends Controller
             $credentials = $request->only('email', 'password');
             $remember= $request->has('remember')?true:false;
              if (Auth::attempt($credentials, $remember)) {
-                // Authentication passed...
+                Toastr::success('Connexion reussie','Success');
                 return redirect()->intended('products');
             }
             else
             {
-                return "email ou mots de passe incorrect";
+                Toastr::error('email ou mots de passe incorrect','Error');
+                return back()->withInput();
             }
         }
        
