@@ -1,6 +1,6 @@
 <html>
    <head>
-      <title>DemoLaravel - @yield('title')</title>
+      <title>INIMOVShop - @yield('title')</title>
       @yield('link')
        <link rel="stylesheet" href="{{asset('styles/toastr.min.css')}}"> 
    </head>

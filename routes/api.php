@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\loginController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', [loginController::class,'authenticateApi'])->name('login');
+
+Route::middleware('auth:api')->group(function (){
+    Route::post('loggout', [loginController::class,'logoutApi'])->name('loggout');
+
+    Route::get('getAllProducts', [ProductController::class,'getAllproducts'])->name('getAllproducts');
+    Route::get('product/{product}', [ProductController::class,'show'])->name('product');
+    Route::get('deleteProduct/{product}', [ProductController::class,'destroyApi'])->name('deleteProduct');
+    Route::post('upProduct', [ProductController::class,'updateApi'])->name('upProduct');
+    Route::post('newProduct', [ProductController::class,'storeApi'])->name('newProduct');
+    
+    Route::post('newCategory', [CategoryController::class,'storeApi'])->name('newCategory');
+    Route::get('deleteCategory/{category}', [CategoryController::class,'deleteApi'])->name('deleteCategory');
+    Route::get('category/{category}', [CategoryController::class,'showApi'])->name('category');
+    Route::get('productsCategory/{category}', [CategoryController::class,'showProductCategory'])->name('productsCategory');
+    Route::get('productCategory/{category}/{product}', [ProductController::class,'productCategorieByNameProduct'])->name('productCategory');
 });
 
-Route::get('products', [ProductController::class,'index'])->name('products');
 

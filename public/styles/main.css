@@ -45,10 +45,12 @@ header {
 nav {
     grid-area: nav;
     background-color: #35302d;
+    overflow: auto;
 }
 main {
     grid-area: main;
     background-color: #dcdedf;
+    overflow: auto;
 }
 
 footer {
@@ -65,12 +67,16 @@ li {
     list-style: none;
 }
 
+.btnIcon:hover {
+    opacity: 0.7;
+}
+
 /* NAVBAR STYLING STARTS */
 .navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
+    padding: 5px;
     background-color: #e30b0b;
     color: #fff;
 }
@@ -287,7 +293,7 @@ input[type="checkbox"] {
 
 .search {
     text-align: center;
-    margin-top: 66px;
+    width: 57%;
 }
 
 .select {
@@ -362,10 +368,10 @@ input[type="checkbox"] {
 }
 
 .searchButton {
-    width: 40px;
+    idth: 40px;
     height: 34px;
-    border: 1px solid #e30b0b;
-    background: #e30b0b;
+    border: 1px solid #35302d;
+    background: #35302d;
     text-align: center;
     color: #fff;
     border-radius: 0 5px 5px 0;
@@ -739,9 +745,15 @@ footer-distributed {
 }
 
 .footer-distributed .footer-left p {
-    color: #8f9296;
-    font-size: 14px;
+    color: #f5f5f5;
+    font-size: 18px;
     margin: 0;
+}
+
+.footer-left {
+    margin: 26px;
+    width: auto;
+    text-align: center;
 }
 /* Footer links */
 

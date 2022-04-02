@@ -46,6 +46,40 @@ class ProductController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllproducts()
+    {
+        $products[]=new product();
+        $category[]=new categorie();
+        $title="Produits";
+        $pages="";
+        if (Auth::user())
+        {
+            foreach(Auth()->user()->categories as $category)
+            {
+                foreach($category->products as $product)
+                {
+                    array_push($products,$product);
+                }
+            }
+            $category=Auth()->user()->categories;
+            $pages="productsCategory";
+        }
+        else
+        {
+            $products= product::all();
+            $category=categorie::all();
+             $pages="index";
+        }
+        // dd($products);
+        
+        return response()->json($products);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -84,6 +118,27 @@ class ProductController extends Controller
         Toastr::success('Produit Ajouté avec succès','Succès');
         return redirect('products');
         // return response()->json($product);
+    }
+
+     public function storeApi(productRequest $request)
+    {
+        $validated= $request->validated();
+         if ($request->hasFile('category_fileimg') ) {
+            if($request->file('product_fileimg')->isValid())
+            {
+                $name = $request->product_fileimg->getClientOriginalName();
+                $request->product_fileimg->storeAs('/public/imageProduct', $name);
+                
+                $validated['product_fileimg']=$name;
+            }
+         }
+         else
+         {
+             $validated['product_fileimg']="";
+         }
+       
+        $product=product::create($validated);
+        return response()->json($product);
     }
 
     /**
@@ -139,6 +194,26 @@ class ProductController extends Controller
         return redirect('products');
     }
 
+    public function updateApi(productRequest $request, product $product)
+    {
+        $validated=$request->all();
+        if ($request->hasFile('category_fileimg') ) {
+            if($request->file('product_fileimg')->isValid())
+            {
+                $name = $request->product_fileimg->getClientOriginalName();
+                $request->product_fileimg->storeAs('/public/imageProduct', $name);
+                $validated['product_fileimg']=$name;
+            }
+        }
+         else
+        {
+            $validated['category_fileimg']=$product->category_fileimg;
+        }
+
+        
+        return 0;
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -147,14 +222,25 @@ class ProductController extends Controller
      */
     public function destroy(product $product)
     {
-        $product->delete();
+
+          $product->delete();
         Toastr::success('Produit Supprimé avec succès','Succès');
         return redirect('products');
     }
 
-    public function apiUrl(Request $request)
+    public function destroyApi(product $product)
     {
-        $uri=$request->apiUrl;
+      $product->delete();
+       return response()->json(['message'=>"Produit Supprimé avec succès"]);
+    }
+
+    public function productCategorieByNameProduct($category,$nameProduct)
+    {
+        $nameprod=htmlspecialchars($nameProduct);
+        $product=product::where([['categorie_id', '=', $category],
+                                ['product_name', '=', $nameprod],])->get();
+        
+        return response()->json($product); 
 
     }
 }

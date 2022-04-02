@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{asset('styles/font-awesome/css/font-awesome.min.css')}}" />
 @endsection
 
-@section('title', 'Page 1')
+@section('title', 'Accueil')
 
 @section('header')
     @include('layouts.partial._header',['title'=>"produits","authentification"=>false])
@@ -16,37 +16,7 @@
 @endsection
 
 @section('main')
-      <div class="search">
-           
-            <form action="">
-                <div>
-                    <label class="select" for="slct">
-                        <select id="slct" required="required">
-                            <option value="" disabled selected>Categories</option>
-                            @foreach ($category as $categorie)
-                            <option value="{{$categorie->id}}">{{$categorie->category_title}}</option>
-                            @endforeach                            
-                        </select>
-                        <svg>
-                            <use xlink:href="#select-arrow-down"></use>
-                        </svg>
-                    </label>
-                    <!-- SVG Sprites-->
-                    <svg class="sprites">
-                        <symbol id="select-arrow-down" viewbox="0 0 10 6">
-                            <polyline points="1 1 5 5 9 1"></polyline>
-                        </symbol>
-                    </svg>
-
-                    <input type="text" class="searchTerm" placeholder="Recherche le produit...">
-                    <button type="submit" class="searchButton">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-      
-        <div class="product">
+        <div class="product" id="productMain">
             @foreach ($products as $product)
                 <div class="el-wrapper">
                 <div class="box-up">

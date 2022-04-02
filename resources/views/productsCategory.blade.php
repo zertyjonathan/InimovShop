@@ -16,44 +16,17 @@
 @endsection
 
 @section('main')
-    @if ($title=="Produits")
-        <div class="search">
-            <form action="">
-                <div>
-                    <label class="select" for="slct">
-                        <select id="slct" required="required">
-                            <option value="" disabled selected> Categories </option>
-                            @foreach ($category as $categorie)
-                            <option value="{{$categorie->id}}">{{$categorie->category_title}}</option>
-                            @endforeach                            
-                        </select>
-                        <svg>
-                            <use xlink:href="#select-arrow-down"></use>
-                        </svg>
-                    </label>
-                    <!-- SVG Sprites-->
-                    <svg class="sprites">
-                        <symbol id="select-arrow-down" viewbox="0 0 10 6">
-                            <polyline points="1 1 5 5 9 1"></polyline>
-                        </symbol>
-                    </svg>
-
-                    <input type="text" class="searchTerm" placeholder="Recherche le produit...">
-                    <button type="submit" class="searchButton">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    @endif
-      
-
         <div class="button" style="margin-top: 80px;margin-left: 21px;">
-                <a href="{{route($title=="Produits"?'newProduct':'newCategory')}}" class="Addprod"> <i class="fa fa-plus"></i> {{$title=="Produits"?'Nouveau produit':'Nouvelle categorie'}}</a>
-        </div>
+                <a href="{{route($title=="Produits"?'newProduct':'newCategory')}}" class="Addprod btnIcon"> 
+                    <i class="fa fa-plus" id="refresh"></i> 
+                    {{$title=="Produits"?'Nouveau produit':'Nouvelle categorie'}}
+                </a> 
+                @if($title=="Produits")
+                     <i class="fa fa-refresh btnIcon" id="refresher" style="font-size: 27px;margin-left: 18px;color: #e30b0b;cursor:pointer" aria-hidden="true"></i>
+                @endif
+            </div>
       
-        <div class="product">
+        <div class="product" id="productMain">
            @if($title=="Produits")
                 @foreach ($products as $product)
                     <div class="el-wrapper">
