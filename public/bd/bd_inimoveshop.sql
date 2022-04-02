@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 31 mars 2022 à 11:31
+-- Généré le : sam. 02 avr. 2022 à 12:00
 -- Version du serveur : 8.0.27
 -- Version de PHP : 7.4.26
 
@@ -37,16 +37,19 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `category_description` longtext COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `categories_category_title_unique` (`category_title`),
   KEY `categories_user_id_foreign` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `categories`
 --
 
 INSERT INTO `categories` (`id`, `category_title`, `category_fileimg`, `user_id`, `created_at`, `updated_at`, `category_description`) VALUES
-(1, 'Vêtements222', '1200px-Attention_Sign.svg.png', 1, '2022-03-31 03:31:52', '2022-03-31 04:45:16', 'pantalon, autres');
+(1, 'Vêtements222', '1200px-Attention_Sign.svg.png', 1, '2022-03-31 03:31:52', '2022-03-31 04:45:16', 'pantalon, autres'),
+(2, 'categorie2', 'package.png', 1, '2022-04-01 22:37:42', '2022-04-02 05:10:22', 'Aucune descprition'),
+(3, 'Véhicules', '497738.png', 1, '2022-04-01 22:38:12', '2022-04-02 04:59:19', 'Tout type de véhicule, gros engins et autres'),
+(4, 'pantalon', 'colis-suspect.png', 1, '2022-04-01 22:55:58', '2022-04-01 22:55:58', NULL),
+(5, 'Categorie 6', 'istockphoto-1311125940-170667a.jpg', 1, '2022-04-02 05:40:27', '2022-04-02 05:40:27', 'Aucune description');
 
 -- --------------------------------------------------------
 
@@ -123,14 +126,25 @@ CREATE TABLE IF NOT EXISTS `products` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `products_categorie_id_foreign` (`categorie_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `products`
 --
 
 INSERT INTO `products` (`id`, `product_name`, `product_price`, `categorie_id`, `product_stock`, `product_fileimg`, `created_at`, `updated_at`) VALUES
-(1, 'ddssqsqq', 2, 1, 3, 'aaa.png', '2022-03-31 03:32:18', '2022-03-31 03:32:18');
+(2, 'Produit 772', 10000, 2, 200, 'colis-suspect.png', '2022-04-01 23:40:58', '2022-04-01 23:40:58'),
+(43, 'K135sdsds1221', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:43:25', '2022-04-01 23:43:25'),
+(4, 'Produit K134', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:41:45', '2022-04-01 23:41:45'),
+(5, 'Produit K135', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:43:25', '2022-04-01 23:43:25'),
+(35, 'Produit 772sdsd', 10000, 2, 200, 'colis-suspect.png', '2022-04-01 23:40:58', '2022-04-01 23:40:58'),
+(36, 'Produit K13687', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:41:45', '2022-04-01 23:41:45'),
+(37, 'Produit K135sdsds', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:43:25', '2022-04-01 23:43:25'),
+(38, 'JJJJ772', 10000, 2, 200, 'colis-suspect.png', '2022-04-01 23:40:58', '2022-04-01 23:40:58'),
+(39, 'ZYUOIK134', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:41:45', '2022-04-01 23:41:45'),
+(40, '271892K135', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:43:25', '2022-04-01 23:43:25'),
+(41, 'MMM772sdsd', 10000, 2, 200, 'colis-suspect.png', '2022-04-01 23:40:58', '2022-04-01 23:40:58'),
+(42, '78892K13687', 10000, 4, 200, 'citations-directeur-commercial-malin16.jpg', '2022-04-01 23:41:45', '2022-04-01 23:41:45');
 
 -- --------------------------------------------------------
 
@@ -158,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `prenom`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Jonathan', 'Talla ', 'tallajonathan12@gmail.com', '2022-03-31 09:59:55', '$2y$10$sD8Tsos8i4eTTkOhoGa0i.K/T2WbX7QpZMUB3vejYmjJF.d89hYaO', 'Odoe5R8IHxbvTqn7la3cyGcbei1Gm7SrhtZxyX5FTo6sixHXYRhd02FU4JAQ', '2022-03-31 09:59:12', '2022-03-31 09:59:12');
+(1, 'Jonathan', 'Talla ', 'tallajonathan12@gmail.com', '2022-03-31 09:59:55', '$2y$10$sD8Tsos8i4eTTkOhoGa0i.K/T2WbX7QpZMUB3vejYmjJF.d89hYaO', 'OTbWf9xRoWB4ZYLGQe4w0TvcWAfIsNdyudtaFTf8OqFl6MrNqQWtd9IS9Oye', '2022-03-31 09:59:12', '2022-03-31 09:59:12');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
