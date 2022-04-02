@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\productRequest;
-use App\Models\categorie;
-use App\Models\product;
+use App\Models\Categorie;
+use App\Models\Product;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +18,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products[]=new product();
-        $category[]=new categorie();
+        $products[]=new Product();
+        $category[]=new Categorie();
         $title="Produits";
         $pages="";
         if (Auth::user())
@@ -36,11 +36,10 @@ class ProductController extends Controller
         }
         else
         {
-            $products= product::all();
-            $category=categorie::all();
+            $products= Product::all();
+            $category=Categorie::all();
              $pages="index";
         }
-        // dd($products);
         
         return view($pages,compact('products','category','title'));
     }
@@ -52,8 +51,8 @@ class ProductController extends Controller
      */
     public function getAllproducts()
     {
-        $products[]=new product();
-        $category[]=new categorie();
+        $products[]=new Product();
+        $category[]=new Categorie();
         $title="Produits";
         $pages="";
         if (Auth::user())
@@ -70,11 +69,10 @@ class ProductController extends Controller
         }
         else
         {
-            $products= product::all();
-            $category=categorie::all();
+            $products= Product::all();
+            $category=Categorie::all();
              $pages="index";
         }
-        // dd($products);
         
         return response()->json($products);
     }
@@ -114,10 +112,9 @@ class ProductController extends Controller
              $validated['product_fileimg']="";
          }
        
-        $product=product::create($validated);
+        $product=Product::create($validated);
         Toastr::success('Produit Ajouté avec succès','Succès');
         return redirect('products');
-        // return response()->json($product);
     }
 
      public function storeApi(productRequest $request)
@@ -137,29 +134,29 @@ class ProductController extends Controller
              $validated['product_fileimg']="";
          }
        
-        $product=product::create($validated);
+        $product=Product::create($validated);
         return response()->json($product);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\product  $product
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(product $product)
+    public function show(Product $product)
     {
-        $product= product::find($product->id);
+        $product= Product::find($product->id);
         return response()->json($product);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\product  $product
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(product $product)
+    public function edit(Product $product)
     {
         $operation="update";
         $category=Auth()->user()->categories;
@@ -170,10 +167,10 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\product  $product
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(productRequest $request, product $product)
+    public function update(productRequest $request, Product $product)
     {
         $validated=$request->all();
         if ($request->hasFile('category_fileimg') ) {
@@ -194,7 +191,7 @@ class ProductController extends Controller
         return redirect('products');
     }
 
-    public function updateApi(productRequest $request, product $product)
+    public function updateApi(productRequest $request, Product $product)
     {
         $validated=$request->all();
         if ($request->hasFile('category_fileimg') ) {
@@ -217,10 +214,10 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\product  $product
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(product $product)
+    public function destroy(Product $product)
     {
 
           $product->delete();
@@ -228,7 +225,7 @@ class ProductController extends Controller
         return redirect('products');
     }
 
-    public function destroyApi(product $product)
+    public function destroyApi(Product $product)
     {
       $product->delete();
        return response()->json(['message'=>"Produit Supprimé avec succès"]);
@@ -237,7 +234,7 @@ class ProductController extends Controller
     public function productCategorieByNameProduct($category,$nameProduct)
     {
         $nameprod=htmlspecialchars($nameProduct);
-        $product=product::where([['categorie_id', '=', $category],
+        $product=Product::where([['categorie_id', '=', $category],
                                 ['product_name', '=', $nameprod],])->get();
         
         return response()->json($product); 

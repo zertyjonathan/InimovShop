@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\categoryRequest;
-use App\Models\categorie;
+use App\Models\Categorie;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category[]=new categorie();
+        $category[]=new Categorie();
         $title="Categories";
         $category=Auth()->user()->categories;
         return view("productsCategory",compact('category','title'));
@@ -60,7 +60,7 @@ class CategoryController extends Controller
        
         $validated['user_id']=Auth()->user()->id;
 
-        $category=categorie::create($validated);
+        $category=Categorie::create($validated);
         Toastr::success('Categorie Ajoutée avec succès','Succès');
         return redirect('categories');
     }
@@ -71,7 +71,7 @@ class CategoryController extends Controller
      * @param  \App\Models\categorie  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(categorie $category)
+    public function show(Categorie $category)
     {
 
         return response()->json($category);
@@ -83,7 +83,7 @@ class CategoryController extends Controller
      * @param  \App\Models\categorie  $category
      * @return \Illuminate\Http\Response
      */
-    public function showProductCategory(categorie $category)
+    public function showProductCategory(Categorie $category)
     {
         $products=$category->products;
         return response()->json($products);
@@ -92,10 +92,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\categorie  $category
+     * @param  \App\Models\Categorie  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(categorie $category)
+    public function edit(Categorie $category)
     {
         $operation="update";
         return view('createUpdateCategory',compact('operation','category'));
@@ -108,7 +108,7 @@ class CategoryController extends Controller
      * @param  \App\Models\categorie  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(categoryRequest $request, categorie $category)
+    public function update(categoryRequest $request, Categorie $category)
     {
         $validated=$request->all();
         // dd( $validated);
@@ -136,7 +136,7 @@ class CategoryController extends Controller
      * @param  \App\Models\categorie  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(categorie $category)
+    public function destroy(Categorie $category)
     {
         //
     }

@@ -28,11 +28,14 @@
                         </div>
                         <div class="a-size">
                             Quantité en stock : <span class="size">{{$product->product_stock}}</span><br>
-                            <div class="iconne">
-                                <a href="{{url('upProduct/'.$product->id)}}"><i class="fa fa-pencil"></i></a>
-                                 
-                                 <a href="{{url('deleteProduct/'.$product->id)}}"><i class="fa fa-trash"></i></a>
-                            </div>
+                            @auth
+                                     <div class="iconne">
+                                        <a href="{{url('upProduct/'.$product->id)}}"><i class="fa fa-pencil"></i></a>
+                                        
+                                        <a href="{{url('deleteProduct/'.$product->id)}}"><i class="fa fa-trash"></i></a>
+                                    </div>
+                            @endauth
+                           
                            
                         </div
                         </div>

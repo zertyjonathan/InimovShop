@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class product extends Model
+class Product extends Model
 {
     use HasFactory;
 
@@ -38,7 +38,7 @@ class product extends Model
      */
     public function categories()
     {
-        return $this->belongsTo('App\Models\categorie','categorie_id');
+        return $this->belongsTo('App\Models\Categorie','categorie_id');
     }
 
 }
